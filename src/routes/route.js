@@ -1,0 +1,42 @@
+const Router = {
+  MAIN: "/*",
+  LOGIN: "/",
+  
+  //---------------- Admin ROUTES ---------------------
+  ADMIN_DASHBOARD: "/admin_portal",
+  ADMIN_USER: "/admin_portal/user",
+  ADMIN_DID_TFN_NUMBER: "/admin_portal/did_tfn_number",
+  ADMIN_REPORT: "/admin_portal/report",
+  ADMIN_EXTENSION: "/admin_portal/extension",
+  ADMIN_CALL_ACTIVE: "/admin_portal/call_actv",
+  ADMIN_QUEUE_CALLS:"/admin_portal/queue_call",
+  ADMIN_CALL_BLOCK:"/admin_portal/call_block",
+  ADMIN_SERVER_STATS: "/admin_portal/server_stats",
+  ADMIN_QUEUE: "/admin_portal/queue",
+  ADMIN_QUEUE_MEMBER: "/admin_portal/queue_member",
+  ADMIN_MINUTES: "/admin_portal/minutes",
+  ADMIN_BILLING_MINUTES: "/admin_portal/billing_minutes",
+  ADMIN_MDR: "/admin_portal/mdr",
+  ADMIN_HISTORY: "/admin_portal/history",
+  ADMIN_AUDIT_LOGS: "/admin_portal/audit_logs",
+  ADMIN_RECORDING: "/admin_portal/recording",
+  ADMIN_CARRIER: "/admin_portal/carrier",
+  ADMIN_VIEW: "/admin_portal/profile",
+  ADMIN_LIVE_EXTENSION: "/admin_portal/live_extension",
+  ADMIN_IVR_UPLOADS:"/admin_portal/ivr_uploads",
+  AdminMOH:"/admin_portal/moh",
+  ADMIN_ACL: "/admin_portal/acl",
+  ADMIN_ACL_HISTORY: "/admin_portal/acl_history",
+  ADMIN_PERMISSIONS_ACCESS:"/admin_portal/permissions",
+  ADMIN_TFN_ASSISTANT:"/admin_portal/assistant",
+  ADMIN_INVOICE: "/admin_portal/invoice",
+  ADMIN_PRODUCT: "/admin_portal/product",
+  ADMIN_MANAGE_CAMPAIGN: "/admin_portal/manage_campaign",
+  ADMIN_BUYER: "/admin_portal/viewbuyer",
+  ADMIN_PROMOTION: "/admin_portal/promotion",
+  ADMIN_CMU: "/admin_portal/cmu",
+  ADMIN_ROLES: "/admin_portal/roles",
+
+};
+
+export default Router;
