@@ -15,6 +15,7 @@ const Router = {
   ADMIN_QUEUE: "/admin_portal/queue",
   ADMIN_QUEUE_MEMBER: "/admin_portal/queue_member",
   ADMIN_MINUTES: "/admin_portal/minutes",
+  ADMIN_LOCAL: "/admin_portal/local",
   ADMIN_BILLING_MINUTES: "/admin_portal/billing_minutes",
   ADMIN_MDR: "/admin_portal/mdr",
   ADMIN_HISTORY: "/admin_portal/history",

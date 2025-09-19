@@ -22,6 +22,7 @@ import AdminAclHistory from "../components/admin/AdminAclHistory";
 import AdminRoles from "../components/admin/AdminRoles";
 import AdminPermission from "../components/admin/AdminPermission";
 import AdminAuditLog from "../components/admin/AdminAuditLogs";
+import AdminLocal from "../components/admin/AdminLocal";
 
 
 
@@ -104,6 +105,10 @@ function PrivateRoute() {
               <Route
                 path={Router.ADMIN_MINUTES}
                 element={<AdminMinutes colorThem={colorThem} />}
+              />
+              <Route
+                path={Router.ADMIN_LOCAL}
+                element={<AdminLocal colorThem={colorThem} />}
               />
               <Route
                 path={Router.ADMIN_HISTORY}

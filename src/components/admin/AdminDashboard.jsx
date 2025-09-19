@@ -30,11 +30,12 @@ function StatCard({ Icon, title, total, remaining, gradient }) {
   return (
     <Card
       sx={{
-        minHeight: "160px",
+        
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-start",
         p: 3,
+        
         borderRadius: "18px",
         background: gradient,
         boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
@@ -70,7 +71,7 @@ function StatCard({ Icon, title, total, remaining, gradient }) {
         </Typography>
         <Typography
           variant="h5"
-          sx={{ fontWeight: 700, color: "#fff", mb: 0.5 }}
+          sx={{ fontWeight: 700, color: "#fff!important", mb: 0.5 }}
         >
           {total} mins
         </Typography>
@@ -140,7 +141,7 @@ function AdminDashboard({ selectedPortal }) {
   }, [calculatedTotals]);
 
   return (
-    <div className="contant_box px-2">
+    <div className="contant_box px-2" style={ { height: '100%'} }>
       {/* Page Title & Button */}
 
       <Box
@@ -177,12 +178,13 @@ function AdminDashboard({ selectedPortal }) {
             sx={{
               width: "100%",
               maxWidth: 1100,
+              minHeight:"100%",
               mx: "auto",
               paddingTop: "20px",
             }}
           >
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <StatCard
                   Icon={AccessTime}
                   title="Total Minutes"
@@ -191,7 +193,7 @@ function AdminDashboard({ selectedPortal }) {
                   gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <StatCard
                   Icon={ForwardToInbox}
                   title="Used Minutes"
@@ -200,7 +202,7 @@ function AdminDashboard({ selectedPortal }) {
                   gradient="linear-gradient(135deg, #f7971e 0%, #ffd200 100%)"
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <StatCard
                   Icon={Call}
                   title="Remaining Minutes"

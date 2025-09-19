@@ -175,6 +175,7 @@ import { getRedirectBillingHistoryReducer } from "./reducers/redirectPortal/redi
 import { createRedirectCallBlockReducer, deleteRedirectCallBlockReducer, getRedirectCallBlockReducer, updateRedirectCallBlockReducer } from "./reducers/redirectPortal/redirectPortal_callBlockReducer";
 import { createAdminPromotionReducer, getAdminPromotionReducers } from "./reducers/adminPortal/adminPortal_promotionReducer";
 import { getAdminRolesReducers } from "./reducers/adminPortal_rolesReducers";
+import { createAdminLocalReducer, getAdminBillingLocalReducers, getAdminLocalReducers, getAdminTotalLocalReducers, updateAdminLocalReducer } from "./reducers/adminPortal/adminPortal_localReducer";
 
 const reducer = combineReducers({
   portal: portalReducer,
@@ -239,6 +240,9 @@ const reducer = combineReducers({
   getUserRedirectGroups:getRedirectGroupsReducer, //16-10-2024
   getAdminPromotion: getAdminPromotionReducers, //18-02-2025
   getAdminRoles: getAdminRolesReducers,
+  getAdminLocal: getAdminLocalReducers, //19/09/2025
+  getAdminBillingLocal: getAdminBillingLocalReducers, //19/09/2025
+  getAdminTotalLocal: getAdminTotalLocalReducers, //19/09/2025
   //CREATE
   createUser: createUserReducer,
   createUserReseller: createUserResellerReducer, //11-07-2024
@@ -270,6 +274,7 @@ const reducer = combineReducers({
   createRedirectBuyer: createRedirectBuyerReducer, //26-09-2024
   createAdminPromotion: createAdminPromotionReducer, //18-02-2025
   blockUserReport: blockUserReportReducers, //02-05-2025
+  createAdminLocal: createAdminLocalReducer, //19/09/2025
   //UPDATE
   updateUser: updateUserReducer,
   updateUserReseller: updateUserResellerReducer, //11-07-2024
@@ -299,6 +304,7 @@ const reducer = combineReducers({
   updateRedirectBuyer:updateRedirectBuyerReducer, //26-09-2024
   suspendDestination: suspendDestinationReducer, //30-04-2025
   updateUserStatus: updateUserStatusReducer, //07-05-2025
+  updateAdminLocal: updateAdminLocalReducer, //19/09/2025
   //DELETE
   deleteUser: deleteUserReducer,
   deleteUserReseller: deleteUserResellerReducer, //11-07-2024

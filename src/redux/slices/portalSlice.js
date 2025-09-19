@@ -7,6 +7,7 @@ const initialState = {
     sip: JSON.parse(localStorage.getItem("sip_token")) || null,
     manage: JSON.parse(localStorage.getItem("manage_token")) || null,
     forwarding: JSON.parse(localStorage.getItem("forwarding_token")) || null,
+    telcolinellc: JSON.parse(localStorage.getItem("telcolinellc_token")) || null,
   },
 };
 

@@ -4,6 +4,7 @@ const portalAPIs = {
   sip: "https://devsip.all8series.com/api",
   forwarding: "https://devredirect.tellipsis.com/api",
   manage: "https://dev.tellipsis.com/api",
+  telcolinellc: "https://voip.telcolinellc.com/api",
 };
 
 /**

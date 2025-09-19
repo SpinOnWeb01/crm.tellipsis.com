@@ -37,6 +37,8 @@ function Header({
   sidebarOpen,
   selectedPortal,
   setSelectedPortal,
+  setOpenSubMenu,
+  setLoading
 }) {
   const state = useSelector((state) => state?.user?.user);
   const user = JSON.parse(localStorage.getItem("admin"));
@@ -96,6 +98,7 @@ function Header({
     sip: "https://devsip.all8series.com/api",
     forwarding: "https://devredirect.tellipsis.com/api",
     manage: "https://dev.tellipsis.com/api",
+    telcolinellc: "https://voip.telcolinellc.com/api"
   };
 
   // ✅ Har portal ke liye static credentials
@@ -104,13 +107,18 @@ function Header({
     sip: { username: "superadmin", password: "Supertest!@2025" },
     manage: { username: "superadmin", password: "Supertest!@2025" },
     forwarding: { username: "superadmin", password: "Super!@2025" },
+    telcolinellc: {username: "superadmin", password: "Supertest!@2025"}
   };
 
   const handlePortalChange = (event) => {
+    setLoading(true);
     const selectedPortal = event.target.value;
     setSelectedPortal(selectedPortal); // ✅ UI update
     //login(selectedPortal); // ✅ Login function call (jo tumne banaya hai)
     // ✅ Purane token remove kar do
+
+    // ✅ Submenu reset whenever portal changes
+  setOpenSubMenu(null);
 
     if (selectedPortal === "crm") {
       dispatch({ type: ALL_USERS_SUCCESS, payload: [] });
@@ -127,6 +135,7 @@ function Header({
       localStorage.removeItem("sip_token");
       localStorage.removeItem("manage_token");
       localStorage.removeItem("forwarding_token");
+      localStorage.removeItem("telcolinellc_token");
 
       dispatch(setPortal({ portal: "crm" }));
 
@@ -136,10 +145,17 @@ function Header({
       });
 
       navigate("/admin_portal");
+      setTimeout(() => {
+      setLoading(false); // ✅ loader stop after everything done
+      navigate("/admin_portal");
+      }, 500); // slight delay for UX
       return;
     }
 
-    if (!selectedPortal || !credentials[selectedPortal]) return;
+    if (!selectedPortal || !credentials[selectedPortal]) {
+      setLoading(false);
+      return
+    };
 
     const { username, password } = credentials[selectedPortal];
     const payload = JSON.stringify({ username, password });
@@ -178,9 +194,12 @@ function Header({
               autoClose: 1500,
             });
           }
+          setLoading(false);
+          //navigate("/admin_portal");
         }
       })
       .catch((error) => {
+        setLoading(false);
         toast.error(error.response?.data?.message || "Login failed", {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 1500,
@@ -314,6 +333,7 @@ function Header({
                           devredirect.tellipsis.com
                         </option>
                         <option value="manage">dev.tellipsis.com</option>
+                        <option value="telcolinellc">voip.telcolinellc.com</option>
                       </select>
                     </div>
                   </Box>

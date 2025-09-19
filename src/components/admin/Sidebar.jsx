@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import StyleIcon from "@mui/icons-material/Style";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
+import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import HistoryIcon from "@mui/icons-material/History";
 import AddToQueueIcon from "@mui/icons-material/AddToQueue";
@@ -31,16 +32,30 @@ import "../admin/adminstyle.css";
 // ========Mobile-sidebar===============>
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GET_ADMIN_ADD_BUYER_SUCCESS } from "../../redux/constants/adminPortal/adminPortal_addBuyerConstants";
 // ========End Mobile-sidebar===============>
 
-function Sidebar({ colorThem, handleClick, sidebarOpen, toggleSidebar }) {
+  const menuConfig = {
+  forwarding: [
+    { label: "Usage Minutes", icon: <AvTimerIcon />, route: Router.ADMIN_BILLING_MINUTES },
+    { label: "Details", icon: <QueryBuilderIcon />, route: Router.ADMIN_MINUTES },
+    { label: "RCR", icon: <HistoryIcon />, route: Router.ADMIN_HISTORY },
+    { label: "CMU", icon: <CalendarMonthIcon />, route: Router.ADMIN_CMU },
+  ],
+  default: [
+    { label: "Usage Minutes", icon: <AvTimerIcon />, route: Router.ADMIN_BILLING_MINUTES },
+    { label: "Toll Free", icon: <QueryBuilderIcon />, route: Router.ADMIN_MINUTES },
+    { label: "Local", icon: <HistoryToggleOffIcon />, route: Router.ADMIN_LOCAL },
+    { label: "RCR", icon: <HistoryIcon />, route: Router.ADMIN_HISTORY },
+  ],
+};
+
+function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubMenu }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = localStorage.getItem("selectedPortal");
   const [open, setOpen] = React.useState(false);
-  const [openSubMenu, setOpenSubMenu] = useState(null);
   const [openSettingMenu, setOpenSettingMenu] = useState(null);
   const [pageRedirect, setPageRedirect] = useState(false);
   const navigateTo = (route) => {
@@ -111,6 +126,13 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, toggleSidebar }) {
     setOpen(false);
   }, [drawerWidth]);
 
+  const selectedPortal =
+    useSelector((state) => state.portal?.selectedPortal) ||
+    localStorage.getItem("selectedPortal");
+
+  const activeMenu = useMemo(() => {
+    return menuConfig[selectedPortal] || menuConfig.default;
+  }, [selectedPortal]);
   const DrawerList = (
     // <Box id="side_bar_screen" sx={{ width: menuWidth, background: "#333", }} role="presentation">
     <Box id="side_bar_screen" sx={{ width: menuWidth }} role="presentation">
@@ -405,54 +427,23 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, toggleSidebar }) {
                           Report
                         </MenuItem>
                         <SubMenu
-                          title="Billing"
-                          icon={<AccountBalanceWalletIcon />}
-                          onClick={() =>
-                            setOpenSubMenu(
-                              openSubMenu === "billing" ? null : "billing"
-                            )
-                          }
-                          open={openSubMenu === "billing"}
-                        >
-                              <MenuItem
-                                icon={<AvTimerIcon />}
-                                onClick={(event) =>
-                                  handleSubMenuClick(
-                                    event,
-                                    Router.ADMIN_BILLING_MINUTES
-                                  )
-                                }
-                              >
-                                Usage Minutes
-                              </MenuItem>
-                            
-                          <MenuItem
-                            icon={<QueryBuilderIcon />}
-                            onClick={(event) =>
-                              handleSubMenuClick(event, Router.ADMIN_MINUTES)
-                            }
-                          >
-                            Details
-                          </MenuItem>
-
-                          <MenuItem
-                            icon={<HistoryIcon />}
-                            onClick={(event) =>
-                              handleSubMenuClick(event, Router.ADMIN_HISTORY)
-                            }
-                          >
-                            RCR
-                          </MenuItem>
-                          <MenuItem
-                            icon={<CalendarMonthIcon />}
-                            onClick={(event) =>
-                              handleSubMenuClick(event, Router.ADMIN_CMU)
-                            }
-                          >
-                            CMU
-                          </MenuItem>
-
-                        </SubMenu>
+      title="Billing"
+      icon={<AccountBalanceWalletIcon />}
+      onClick={() =>
+        setOpenSubMenu(openSubMenu === "billing" ? null : "billing")
+      }
+      open={openSubMenu === "billing"}
+    >
+      {activeMenu.map((item) => (
+        <MenuItem
+          key={item.label}
+          icon={item.icon}
+          onClick={(event) => handleSubMenuClick(event, item.route)}
+        >
+          {item.label}
+        </MenuItem>
+      ))}
+    </SubMenu>
 
 
                             {/* <SubMenu
