@@ -189,9 +189,9 @@ function AdminBillingMinut({ colorThem }) {
   };
 
   useEffect(() => {
-    if (state.portal.selectedPortal !== "crm"){
-    dispatch(getAdminBillingMinutes());
-    dispatch(getAdminCallActive());
+    if (state.portal.selectedPortal !== "crm") {
+      dispatch(getAdminBillingMinutes());
+      dispatch(getAdminCallActive());
     }
   }, [state.portal.selectedPortal]);
 
@@ -240,228 +240,246 @@ function AdminBillingMinut({ colorThem }) {
 
   return (
     <>
-    <div>
-            <div className="contant_box">
-              <Box
-                                  className="right_sidebox mobile_top_pddng"
-                                  component="main"
-                                 
-                                sx={{
+      <div>
+        <div className="contant_box">
+          <Box
+            className="right_sidebox mobile_top_pddng"
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 0.5,
+              display: "flex",
+              justifyContent: "start",
               
-                            flexGrow: 1,
-                        p: 0.5,
-                        display: 'flex',
-                        justifyContent: 'start',
-                        minHeight: '100vh',
-                        
-                        marginTop: '65px',
-                       
-                             
-                      }}
+
+              marginTop: "65px",
+            }}
+          >
+            <div className="container-fluid pt-3">
+              <div className="row">
+                <div className="col-lg-12 pt-3 usesage">
+                  <div className="">
+                    {/* <!----> */}
+                    <div className="tab-content" id="pills-tabContent">
+                      <div
+                        className="tab-pane fade show active"
+                        id="pills-home"
+                        role="tabpanel"
+                        aria-labelledby="pills-home-tab"
                       >
-            <div className="col-lg-12 pt-3 usesage">
-              <div className="">
-                {/* <!----> */}
-                <div className="tab-content" id="pills-tabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="pills-home"
-                    role="tabpanel"
-                    aria-labelledby="pills-home-tab"
-                  >
-                    {/* <!--role-contet--> */}
-                    <div className="cntnt_title">
-                      <div className="">
-                        <h3
-                          style={{
-                            margin: "0px",
-                            color: "#41454E",
-                            fontWeight: "500",
-                            fontSize: "2rem",
-                          }}
-                        >
-                          Usage Minutes
-                        </h3>
-                        {/* <p>
+                        {/* <!--role-contet--> */}
+                        <div className="cntnt_title">
+                          <div className="">
+                            <h3
+                              style={{
+                                margin: "0px",
+                                color: "#41454E",
+                                fontWeight: "500",
+                                fontSize: "2rem",
+                              }}
+                            >
+                              Usage Minutes
+                            </h3>
+                            {/* <p>
                           Use this to monitor and interact with the active
                           calls.
                         </p> */}
-                      </div>
-                    </div>
-                    <Grid
-                      container
-                      className="cdr_filter_row"
-                      style={{
-                        padding: "20px 0",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Grid
-                        xl={3}
-                        lg={3}
-                        md={3}
-                        sm={12}
-                        xs={12}
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <LocalizationProvider
-                          dateAdapter={AdapterDayjs}
-                          className={classes.borderedGreen}
-                        >
-                          <DemoContainer
-                            components={["DatePicker"]}
-                            sx={{ width: "98%" }}
-                          >
-                            <DatePicker
-                              label="From Date"
-                              style={{ width: "300px" }}
-                              value={
-                                fromDate ? dayjs(fromDate, "DD/MM/YYYY") : null
-                              } // Convert selectedDate to a dayjs object
-                              onChange={handleFromDateChange}
-                              renderInput={(props) => <TextField {...props} />}
-                              format="DD/MM/YYYY"
-                            />
-                          </DemoContainer>
-                        </LocalizationProvider>
-                      </Grid>
-                      <Grid
-                        xl={3}
-                        lg={3}
-                        md={3}
-                        sm={12}
-                        xs={12}
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <LocalizationProvider
-                          dateAdapter={AdapterDayjs}
-                          className={classes.formControl}
-                        >
-                          <DemoContainer
-                            components={["DatePicker"]}
-                            sx={{ width: "98%" }}
-                          >
-                            <DatePicker
-                              label="To Date"
-                              style={{ width: "98%" }}
-                              value={
-                                toDate ? dayjs(toDate, "DD/MM/YYYY") : null
-                              } // Convert selectedDate to a dayjs object
-                              onChange={handleToDateChange}
-                              renderInput={(props) => <TextField {...props} />}
-                              format="DD/MM/YYYY"
-                            />
-                          </DemoContainer>
-                        </LocalizationProvider>
-                      </Grid>
-                    </Grid>
-                    <Grid
-                      container
-                      className="cdr_filter_row"
-                      style={{
-                        padding: "20px 0",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Grid
-                        xl={12}
-                        lg={12}
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Box
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <Typography
-                            style={{
-                              fontSize: "17px",
-                              fontWeight: "600",
-                              color: "rgb(66, 118, 95)",
-                            }}
-                          >
-                            Total Used Minute:
-                            <span style={{ fontWeight: "400", padding: "4px" }}>
-                              {tMinutes}
-                            </span>
-                          </Typography>
-                        </Box>
-                      </Grid>
-
-                      <Grid
-                        xl={12}
-                        lg={12}
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "end",
-                          padding: "20px 0",
-                        }}
-                      >
-                        <IconButton
-                          className="filter_search_btn"
-                          style={{
-                            marginLeft: "0 !important",
-                            background: "green !important",
-                          }}
-                          onClick={handleSearch}
-                        >
-                          Search &nbsp;
-                          <SearchIcon />
-                        </IconButton>
-                        <IconButton
-                          className="filter_reset_btn"
-                          style={{
-                            marginLeft: "0 !important",
-                            backgroundColor: "grey !important",
-                          }}
-                          onClick={handleReset}
-                        >
-                          Reset &nbsp;
-                          <RestartAltIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                    <div className="row">
-                      <ThemeProvider theme={theme}>
-                        <div style={{ height: "100%", width: "100%" }}>
-                          <StyledDataGrid
-                            // checkboxSelection
-                            rows={rows}
-                            columns={columns}
-                            density="compact"
-                            headerClassName="custom-header"
-                            // getRowClassName={(params) =>
-                            //   isRowBordered(params)
-                            //     ? classes.borderedGreen
-                            //     : classes.borderedRed
-                            // }
-                            components={{ Toolbar: GridToolbar }}
-                            slots={{
-                              toolbar: CustomToolbar,
-                            }}
-                            autoHeight
-                          />
+                          </div>
                         </div>
-                      </ThemeProvider>
-                    </div>
-                  </div>
+                        <Grid
+                          container
+                          className="cdr_filter_row"
+                          style={{
+                            padding: "20px 0",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Grid
+                            xl={3}
+                            lg={3}
+                            md={3}
+                            sm={12}
+                            xs={12}
+                            style={{ display: "flex", alignItems: "center", marginBottom:"10px", }}
+                          >
+                            <LocalizationProvider
+                              dateAdapter={AdapterDayjs}
+                              className={classes.borderedGreen}
+                            >
+                              <DemoContainer
+                                components={["DatePicker"]}
+                                sx={{ width: "98%" }}
+                              >
+                                <DatePicker
+                                  label="From Date"
+                                  style={{ width: "300px" }}
+                                  value={
+                                    fromDate
+                                      ? dayjs(fromDate, "DD/MM/YYYY")
+                                      : null
+                                  } // Convert selectedDate to a dayjs object
+                                  onChange={handleFromDateChange}
+                                  renderInput={(props) => (
+                                    <TextField {...props} />
+                                  )}
+                                  format="DD/MM/YYYY"
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
+                          </Grid>
+                          <Grid
+                            xl={3}
+                            lg={3}
+                            md={3}
+                            sm={12}
+                            xs={12}
+                            style={{ display: "flex", alignItems: "center", marginBottom:"10px", }}
+                          >
+                            <LocalizationProvider
+                              dateAdapter={AdapterDayjs}
+                              className={classes.formControl}
+                            >
+                              <DemoContainer
+                                components={["DatePicker"]}
+                                sx={{ width: "98%" }}
+                              >
+                                <DatePicker
+                                  label="To Date"
+                                  style={{ width: "98%" }}
+                                  value={
+                                    toDate ? dayjs(toDate, "DD/MM/YYYY") : null
+                                  } // Convert selectedDate to a dayjs object
+                                  onChange={handleToDateChange}
+                                  renderInput={(props) => (
+                                    <TextField {...props} />
+                                  )}
+                                  format="DD/MM/YYYY"
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          container
+                          className="cdr_filter_row"
+                          style={{
+                            padding: "20px 0",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Grid
+                            xl={12}
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Box
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography
+                                style={{
+                                  fontSize: "17px",
+                                  fontWeight: "600",
+                                  color: "rgb(66, 118, 95)",
+                                }}
+                              >
+                                Total Used Minute:
+                                <span
+                                  style={{ fontWeight: "400", padding: "4px" }}
+                                >
+                                  {tMinutes}
+                                </span>
+                              </Typography>
+                            </Box>
+                          </Grid>
 
-                  {/* <!----> */}
-                  {/* 
+                          <Grid
+                            xl={12}
+                            lg={12}
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                               justifyContent: {
+                                xs: "center", 
+                                md: "end",
+                                lg: "end",
+                                xl: "end"
+                              },
+                              padding: "20px 0",
+                            }}
+                          >
+                            <IconButton
+                              className="filter_search_btn"
+                              style={{
+                                marginLeft: "0 !important",
+                                background: "green !important",
+                              }}
+                              onClick={handleSearch}
+                            >
+                              Search &nbsp;
+                              <SearchIcon />
+                            </IconButton>
+                            <IconButton
+                              className="filter_reset_btn"
+                              style={{
+                                marginLeft: "0 !important",
+                                backgroundColor: "grey !important",
+                              }}
+                              onClick={handleReset}
+                            >
+                              Reset &nbsp;
+                              <RestartAltIcon />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+
+                        
+                        <div className="row">
+                          <ThemeProvider theme={theme}>
+                            <div style={{ height: "100%", width: "100%" }}>
+                              <StyledDataGrid
+                                // checkboxSelection
+                                rows={rows}
+                                columns={columns}
+                                density="compact"
+                                headerClassName="custom-header"
+                                // getRowClassName={(params) =>
+                                //   isRowBordered(params)
+                                //     ? classes.borderedGreen
+                                //     : classes.borderedRed
+                                // }
+                                components={{ Toolbar: GridToolbar }}
+                                slots={{
+                                  toolbar: CustomToolbar,
+                                }}
+                                autoHeight
+                              />
+                            </div>
+                          </ThemeProvider>
+                        </div>
+                      </div>
+
+                      {/* <!----> */}
+                      {/* 
             <!----> */}
+                    </div>
+                    {/* <!----> */}
+                  </div>
                 </div>
-                {/* <!----> */}
               </div>
             </div>
           </Box>

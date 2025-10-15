@@ -1131,8 +1131,7 @@ function DID_TFN_number({ colorThem, selectedPortal }) {
               p: 0.5,
               display: "flex",
               justifyContent: "start",
-              minHeight: "100vh",
-
+            
               marginTop: "65px",
             }}
           >
@@ -1818,6 +1817,7 @@ function DID_TFN_number({ colorThem, selectedPortal }) {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 position: "relative",
+                                flexWrap: "wrap",
                                 top: "0",
                               }}
                             >
@@ -1883,8 +1883,8 @@ function DID_TFN_number({ colorThem, selectedPortal }) {
                           </div>
                           {/* mobile_view_end */}
 
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex justify-content-between">
+                          <div className="d-flex justify-content-between my-2">
+                            <div className="d-flex justify-content-between flex-wrap gap-2">
                               <div>
                                 <FormControl>
                                   {/* <FormLabel id="demo-row-radio-buttons-group-label">Live Calls</FormLabel> */}

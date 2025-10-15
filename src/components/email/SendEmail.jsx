@@ -214,7 +214,8 @@ function SendEmail() {
        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
        borderRadius: '24px',
        overflow: 'hidden',
-       transition: 'all 0.3s ease-in-out'
+       transition: 'all 0.3s ease-in-out',
+         width: "90%",
      }}>
         <div className="row d-flex justify-content-around align-items-center">
              {/* Left Side - Image Section */}

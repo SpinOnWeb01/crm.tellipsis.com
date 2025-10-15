@@ -69,7 +69,7 @@ const Layout = ({ handleClick, selectedPortal, setSelectedPortal }) => {
           willChange: "margin, width",
           backgroundColor: themeStyles[colorThem]?.bgColor || "transparent",
           color: themeStyles[colorThem]?.textColor || "#000000",
-          minHeight: "100vh",
+          // minHeight: "100vh",
           padding: "10px",
           borderRadius: "10px",
           position: "relative",

@@ -29,6 +29,7 @@ import { Image } from "react-bootstrap";
 import { ALL_USERS_SUCCESS } from "../../redux/constants/userConstants";
 import { GET_ADMIN_AUDIT_LOGS_SUCCESS } from "../../redux/constants/adminPortal_auditLogsConstants";
 import { GET_ADMIN_ROLES_SUCCESS } from "../../redux/constants/adminPortal_rolesConstants";
+import { portalAPIs, credentials } from "../../config/portalConfig";
 
 function Header({
   colorThem,
@@ -38,7 +39,7 @@ function Header({
   selectedPortal,
   setSelectedPortal,
   setOpenSubMenu,
-  setLoading
+  setLoading,
 }) {
   const state = useSelector((state) => state?.user?.user);
   const user = JSON.parse(localStorage.getItem("admin"));
@@ -92,23 +93,23 @@ function Header({
       navigate("/");
     }
   };
+  // const portalAPIs = {
 
-  const portalAPIs = {
-    crm: "https://crm.tellipsis.com/api",
-    sip: "https://devsip.all8series.com/api",
-    forwarding: "https://devredirect.tellipsis.com/api",
-    manage: "https://dev.tellipsis.com/api",
-    telcolinellc: "https://voip.telcolinellc.com/api"
-  };
+  //   crm: "https://crm.tellipsis.com/api",
+  //   sip: "https://devsip.all8series.com/api",
+  //   forwarding: "https://devredirect.tellipsis.com/api",
+  //   manage: "https://dev.tellipsis.com/api",
+  //   telcolinellc: "https://voip.telcolinellc.com/api"
+  // };
 
   // ✅ Har portal ke liye static credentials
-  const credentials = {
-    crm: { username: "superadmin", password: "Super@2025" },
-    sip: { username: "superadmin", password: "Supertest!@2025" },
-    manage: { username: "superadmin", password: "Supertest!@2025" },
-    forwarding: { username: "superadmin", password: "Super!@2025" },
-    telcolinellc: {username: "superadmin", password: "Supertest!@2025"}
-  };
+  // const credentials = {
+  //   crm: { username: "superadmin", password: "Super@2025" },
+  //   sip: { username: "superadmin", password: "Supertest!@2025" },
+  //   manage: { username: "superadmin", password: "Supertest!@2025" },
+  //   forwarding: { username: "superadmin", password: "Super!@2025" },
+  //   telcolinellc: {username: "superadmin", password: "Supertest!@2025"}
+  // };
 
   const handlePortalChange = (event) => {
     setLoading(true);
@@ -118,7 +119,7 @@ function Header({
     // ✅ Purane token remove kar do
 
     // ✅ Submenu reset whenever portal changes
-  setOpenSubMenu(null);
+    setOpenSubMenu(null);
 
     if (selectedPortal === "crm") {
       dispatch({ type: ALL_USERS_SUCCESS, payload: [] });
@@ -146,16 +147,16 @@ function Header({
 
       navigate("/admin_portal");
       setTimeout(() => {
-      setLoading(false); // ✅ loader stop after everything done
-      navigate("/admin_portal");
+        setLoading(false); // ✅ loader stop after everything done
+        navigate("/admin_portal");
       }, 500); // slight delay for UX
       return;
     }
 
     if (!selectedPortal || !credentials[selectedPortal]) {
       setLoading(false);
-      return
-    };
+      return;
+    }
 
     const { username, password } = credentials[selectedPortal];
     const payload = JSON.stringify({ username, password });
@@ -325,15 +326,11 @@ function Header({
                         value={selectedPortal}
                         onChange={handlePortalChange}
                       >
-                        <option selected value="crm">
-                          Choose Portal
-                        </option>
-                        <option value="sip">devsip.all8series.com</option>
-                        <option value="forwarding">
-                          devredirect.tellipsis.com
-                        </option>
-                        <option value="manage">dev.tellipsis.com</option>
-                        <option value="telcolinellc">voip.telcolinellc.com</option>
+                        {Object.entries(portalAPIs).map(([key, url]) => (
+                          <option key={key} value={key}>
+                            {new URL(url).hostname}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </Box>

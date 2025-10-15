@@ -1248,7 +1248,7 @@ function AdminReport({ colorThem }) {
                          p: 0.5,
                          display: 'flex',
                          justifyContent: 'start',
-                         minHeight: '100vh',
+                         
                          
                          marginTop: '65px',
                         
@@ -1306,6 +1306,7 @@ function AdminReport({ colorThem }) {
                           >
                             <FormControl
                               fullWidth
+                              sx={{pb:2}}
                               style={{ width: "98%", }}
                               className={classes.formControl}
                               //                             sx={{
@@ -1356,6 +1357,7 @@ function AdminReport({ colorThem }) {
                           >
                             <TextField
                               className={`${classes.formControl} textfield_select`}
+                              sx={{pb:2}}
                               style={{
                                 width: "98%",
                               }}
@@ -1408,6 +1410,7 @@ function AdminReport({ colorThem }) {
                           >
                             <TextField
                               className={`${classes.formControl} textfield_select`}
+                              sx={{pb:2}}
                               style={{
                                 width: "98%",
                               }}
@@ -1440,6 +1443,7 @@ function AdminReport({ colorThem }) {
                           >
                             <TextField
                               className={`${classes.formControl} textfield_select`}
+                              sx={{pb:2}}
                               style={{
                                 width: "98%",
                               }}

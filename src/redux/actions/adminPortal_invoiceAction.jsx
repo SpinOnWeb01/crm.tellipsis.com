@@ -1,16 +1,16 @@
 import axios from "axios";
-import { CREATE_ADMIN_INVOICE_FAIL, CREATE_ADMIN_INVOICE_REQUEST, CREATE_ADMIN_INVOICE_SUCCESS, GET_ADMIN_INVOICE_FAIL, GET_ADMIN_INVOICE_REQUEST, GET_ADMIN_INVOICE_SUCCESS, SEND_MAIL_FAIL, SEND_MAIL_REQUEST, SEND_MAIL_SUCCESS, UPDATE_ADMIN_INVOICE_FAIL, UPDATE_ADMIN_INVOICE_REQUEST, UPDATE_ADMIN_INVOICE_SUCCESS } from "../constants/adminPortal_invoiceConstants";
+import { CREATE_ADMIN_INVOICE_FAIL, CREATE_ADMIN_INVOICE_REQUEST, CREATE_ADMIN_INVOICE_SUCCESS, CREATE_MANAGE_PORTAL_INVOICE_FAIL, CREATE_MANAGE_PORTAL_INVOICE_REQUEST, CREATE_MANAGE_PORTAL_INVOICE_SUCCESS, GET_ADMIN_INVOICE_FAIL, GET_ADMIN_INVOICE_REQUEST, GET_ADMIN_INVOICE_SUCCESS, SEND_MAIL_FAIL, SEND_MAIL_REQUEST, SEND_MAIL_SUCCESS, UPDATE_ADMIN_INVOICE_FAIL, UPDATE_ADMIN_INVOICE_REQUEST, UPDATE_ADMIN_INVOICE_SUCCESS } from "../constants/adminPortal_invoiceConstants";
 import { toast } from "react-toastify";
 import { getPortalConfig } from "../../utils/portalConfig";
 
-export const getAdminInvoice = () => async (dispatch, getState) => {
+export const getAdminInvoice = (domain) => async (dispatch, getState) => {
     const { apiBase, headers } = getPortalConfig(getState(), "products");
     try {
       dispatch({ type: GET_ADMIN_INVOICE_REQUEST });
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${apiBase}/invoice`,
+        url: `${apiBase}/invoice?domain_name=${domain}`,
         headers: headers
       };
       await axios
@@ -71,7 +71,50 @@ export const getAdminInvoice = () => async (dispatch, getState) => {
       }
     };
 
-    export const updateAdminInvoice = (updateInvoice, setOpenModal, setResponse,) => async (dispatch, getState) => {
+    
+export const createManageInvoice = (createManageInvoice, setResponse, handleClose) => async (dispatch) => {
+    const token = JSON.parse(localStorage.getItem("manage_token"));
+      try {
+        dispatch({ type: CREATE_MANAGE_PORTAL_INVOICE_REQUEST });
+        const config = {
+          headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.access_token} `,
+        },
+        };
+        const { data } = await axios.post(
+          
+          
+          `https://dev.tellipsis.com/api/invoicepaid`,
+          createManageInvoice,
+          config
+        );
+       if (data?.status === 200) {
+          toast.success(data?.message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1500,
+          });
+          setResponse(data);
+          handleClose();
+        }  else {
+          toast.error(data?.message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2500,
+          });
+        }
+        dispatch({ type: CREATE_MANAGE_PORTAL_INVOICE_SUCCESS, payload: data });
+      } catch (error) {
+        toast.error(error?.response?.data?.message, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 2500,
+        });
+        dispatch({
+          type: CREATE_MANAGE_PORTAL_INVOICE_FAIL,
+          payload: error?.response?.data?.message,
+        });
+      }
+    };
+    export const updateAdminInvoice = (updateInvoice, setResponse, setOpenModal) => async (dispatch, getState) => {
       const { apiBase, headers } = getPortalConfig(getState(), "products");
         try {
           dispatch({ type: UPDATE_ADMIN_INVOICE_REQUEST });

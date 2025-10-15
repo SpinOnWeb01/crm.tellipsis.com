@@ -349,7 +349,7 @@ function User({ colorThem, selectedPortal }) {
     } else {
       errors.service = "";
     }
-    const emailCond = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailCond = /^[\w.-]+@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     if (!inputValues.email) {
       errors.email = "Email is required";
       isValid = false;
@@ -1316,7 +1316,7 @@ function User({ colorThem, selectedPortal }) {
               p: 0.5,
               display: "flex",
               justifyContent: "start",
-              minHeight: "100vh",
+             
 
               marginTop: "65px",
             }}
@@ -1758,7 +1758,7 @@ function User({ colorThem, selectedPortal }) {
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          alignItems: "end",
+                          alignItems: "center",
                         }}
                          >
                         <div>

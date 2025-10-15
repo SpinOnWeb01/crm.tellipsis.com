@@ -570,7 +570,7 @@ function AdminAuditLog({ colorThem }) {
               p: 0.5,
               display: "flex",
               justifyContent: "start",
-              minHeight: "100vh",
+              
 
               marginTop: "65px",
             }}

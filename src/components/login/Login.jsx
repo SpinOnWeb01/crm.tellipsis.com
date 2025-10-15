@@ -48,99 +48,115 @@ const CssTextField = withStyles({
 })(TextField);
 
 function Login() {
-  const current_user = localStorage.getItem("current_user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
-
-  const handleMouseDownPassword = (event) => event.preventDefault();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const buttonRef = useRef(null);
   const location = useLocation();
   const redirect = location?.state?.data;
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = JSON.stringify({ username: email, password: password });
+  const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${api.dev}/api/login`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        const values = response?.data;
-        if (values?.status === 200) {
-          if (values.user_role === "Superadmin") {
-            // localStorage.setItem("current_superadmin", values.user_name);
-            // localStorage.setItem(`superadmin_${values.user_name}`, JSON.stringify(values));
-            //localStorage.setItem("admin", JSON.stringify(values));
-            localStorage.setItem("crm_token", JSON.stringify(values));
-            localStorage.setItem("selectedPortal", "crm");
-
-            dispatch(setPortal({ portal: "crm" }));
-            dispatch(
-              setPortalToken({ portal: "crm", token: values })
-            );
-            navigate("/admin_portal", { state: { data: data } });
-          } else if (values.user_role === "Admin") {
-            localStorage.setItem("admin", JSON.stringify(values));
-            navigate("/admin_portal");
-          } else if (values.user_role === "Reseller") {
-            localStorage.setItem("admin", JSON.stringify(values));
-            localStorage.setItem("reseller", JSON.stringify(values));
-            navigate("/reseller_portal");
-          } else if (values.user_role === "User") {
-            localStorage.setItem("current_user", values.user_name);
-            localStorage.setItem(
-              `user_${values.user_name}`,
-              JSON.stringify(values)
-            );
-            navigate("/redirect_portal");
-          } else if (values.user_role === "Client") {
-            localStorage.setItem(
-              `user_${values.user_name}`,
-              JSON.stringify(values)
-            );
-            navigate("/redirect_portal");
-          }
-          // navigate("/dashboard");
-          // Clear the form fields
-          setEmail("");
-          setPassword("");
-
-          dispatch(login(values));
-        }
-        if (values.status === 200) {
-          toast.success(values.message, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1500,
-          });
-          //   navigate("/"})
-        } else {
-          toast.error(values.message, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 5000,
-          });
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 6000,
-        });
-      });
+  const payload = {
+    username: email,
+    password: password,
   };
+
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: `${api.dev}/api/login`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(payload),
+  };
+
+  try {
+    const response = await axios.request(config);
+    const values = response?.data;
+
+    if (values?.status === 200) {
+      // ✅ Role-based routing and localStorage logic
+      switch (values.user_role) {
+        case "Superadmin":
+          localStorage.setItem("crm_token", JSON.stringify(values));
+          localStorage.setItem("selectedPortal", "crm");
+          dispatch(setPortal({ portal: "crm" }));
+          dispatch(setPortalToken({ portal: "crm", token: values }));
+          navigate("/admin_portal", { state: { data: payload } });
+          break;
+
+        case "Admin":
+          localStorage.setItem("admin", JSON.stringify(values));
+          navigate("/admin_portal");
+          break;
+
+        case "Reseller":
+          localStorage.setItem("admin", JSON.stringify(values));
+          localStorage.setItem("reseller", JSON.stringify(values));
+          navigate("/reseller_portal");
+          break;
+
+        case "User":
+        case "Client":
+          localStorage.setItem(`user_${values.user_name}`, JSON.stringify(values));
+          navigate("/redirect_portal");
+          break;
+
+        default:
+          toast.warn("Unknown user role!", {
+            position: "top-right",
+            autoClose: 3000,
+          });
+      }
+
+      // ✅ Success Toast
+      toast.success(values.message || "Login successful!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+
+      // ✅ Clear form and Redux login
+      setEmail("");
+      setPassword("");
+      dispatch(login(values));
+    } else {
+      // ❌ Invalid status (like 401, 403)
+      toast.error(values?.message || "Login failed!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  } catch (error) {
+    // ✅ Handle ALL possible error types safely
+    let message = "Something went wrong! Please try again.";
+
+    if (error.response) {
+      message = error.response.data?.message || "Server responded with an error.";
+    } else if (error.request) {
+      message = "No response from server.";
+    } else if (error.message.includes("Network Error")) {
+      message = "Network error. Please check your connection.";
+    }
+
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+    });
+
+    // Optionally log to a service instead of console
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("Login error:", error);
+    }
+  }
+};
+
 
   const handleFocus = (e) => {
     e.target.select();
@@ -324,17 +340,22 @@ function Login() {
           <div
             className="col-md-10 mx-auto rounded-4 p-4"
             style={{
-              background: "rgba(255, 255, 255, 0.75)",
+              backgroundColor: '#ffffffa8',
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
               border: "1px solid rgba(255, 255, 255, 0.18)",
               boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.1)",
               borderRadius: "24px",
               overflow: "hidden",
+              width: "90%",
               transition: "all 0.3s ease-in-out",
+              
             }}
+           
+
+            
           >
-            <div className="row d-flex justify-content-around align-items-center">
+            <div className="row d-flex justify-content-around align-items-center" >
               {/* Left Side - Image Section */}
               <div className="col-md-5 p-0 d-none d-md-block border-left">
                 <div className="loginimg">

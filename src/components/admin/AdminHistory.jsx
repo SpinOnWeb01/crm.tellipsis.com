@@ -576,7 +576,7 @@ function AdminHistory({ colorThem }) {
                        p: 0.5,
                        display: 'flex',
                        justifyContent: 'start',
-                       minHeight: '100vh',
+                       
                        
                        marginTop: '65px',
                       
@@ -598,16 +598,25 @@ function AdminHistory({ colorThem }) {
                       >
                         {/* <!--role-contet--> */}
                         <div className="d-xxl-none d-xl-none d-lg-none d-md-none d-sm-block d-block">
-                          <h3
-                            style={{
-                              margin: "0px",
-                              color: "#41454E",
-                              fontWeight: "500",
-                              fontSize: "2rem",
-                            }}
-                          >
-                            Reseller Commision Report
-                          </h3>
+                          <div className="cntnt_title">
+                          <div className="">
+                            <h3
+                              style={{
+                                margin: "0px",
+                                color: "#41454E",
+                                fontWeight: "500",
+                                fontSize: "2rem",
+                              }}
+                            >
+                              Reseller Commision Report
+
+                            </h3>
+                            {/* <p>
+                          Use this to monitor and interact with the active
+                          calls.
+                        </p> */}
+                          </div>
+                        </div>
                         </div>
                         <div
                           className="cntnt_title mobile_justify_end"
@@ -1019,6 +1028,7 @@ function AdminHistory({ colorThem }) {
                                       sm={12}
                                       xs={12}
                                       style={{
+                                         margin: "7px 0",
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
@@ -1031,11 +1041,11 @@ function AdminHistory({ colorThem }) {
                                       >
                                         <DemoContainer
                                           components={["DatePicker"]}
-                                          sx={{ width: "98%" }}
+                                          sx={{ width: "98%", }}
                                         >
                                           <DatePicker
                                             label="From Date"
-                                            style={{ width: "300px" }}
+                                            style={{ width: "300px",  pb:2, }}
                                             value={
                                               fromDate
                                                 ? dayjs(fromDate, "DD/MM/YYYY")
@@ -1060,6 +1070,7 @@ function AdminHistory({ colorThem }) {
                                         display: "flex",
                                         alignItems: "center",
                                         height: "53px",
+                                        
                                       }}
                                     >
                                       <LocalizationProvider
@@ -1072,7 +1083,7 @@ function AdminHistory({ colorThem }) {
                                         >
                                           <DatePicker
                                             label="To Date"
-                                            style={{ width: "98%" }}
+                                            style={{ width: "98%",  margin: "7px 10px", }}
                                             value={
                                               toDate
                                                 ? dayjs(toDate, "DD/MM/YYYY")
@@ -1099,10 +1110,10 @@ function AdminHistory({ colorThem }) {
                                       md={12}
                                       sm={12}
                                       xs={12}
-                                      style={{
+                                      sx={{
                                         display: "flex",
                                         alignItems: "center",
-                                        justifyContent: "end",
+                                        justifyContent: "center",
                                         padding: "0px 0",
                                       }}
                                     >
@@ -1256,7 +1267,7 @@ function AdminHistory({ colorThem }) {
                           >
                             <FormControl
                               fullWidth
-                              style={{ width: "98%", margin: "7px 0" }}
+                              style={{ width: "98%", marginBottom: "5px" }}
                               className={classes.formControl}
                             >
                               <InputLabel id="demo-simple-select-label">
@@ -1296,6 +1307,7 @@ function AdminHistory({ colorThem }) {
                             xs={12}
                             style={{
                               display: "flex",
+                              marginBottom: "10px",
                               alignItems: "center",
                               justifyContent: "center",
                               height: "53px",
@@ -1344,7 +1356,7 @@ function AdminHistory({ colorThem }) {
                             >
                               <DemoContainer
                                 components={["DatePicker"]}
-                                sx={{ width: "98%" }}
+                                sx={{ width: "98%", marginBottom: "10px"}}
                               >
                                 <DatePicker
                                   label="To Date"
@@ -1373,10 +1385,16 @@ function AdminHistory({ colorThem }) {
                             md={12}
                             sm={12}
                             xs={12}
-                            style={{
+                            sx={{
                               display: "flex",
                               alignItems: "center",
-                              justifyContent: "end",
+                              justifyContent: {
+                                xs: "center",
+                                sm: "center",
+                                md: "flex-end",
+                                lg: "flex-end",
+                                xl: "flex-end",
+                              },
                               padding: "0px 0",
                             }}
                           >

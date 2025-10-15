@@ -940,7 +940,7 @@ label[data-shrink="false"]
 }
 .pro-sidebar .pro-menu {
   padding-top: 15px !important;
-  padding-bottom: 60px !important;
+  padding-bottom: 0px !important;
   background: #41454E;
 }
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation16.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
@@ -2174,7 +2174,7 @@ td {
   background-size: cover;
   background-position: center;
   background: rgb(37 67 54);
-  background: linear-gradient(179deg, rgb(92 190 235) -12%, rgb(255 255 255) 62%) !important;
+  background: linear-gradient(179deg, rgb(176 222 243) -12%, rgb(255 255 255) 62%) !important;
 }
 .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
   /* background-image: url("/public/img/mdlbg-cover.jpg") !important; */
@@ -2395,7 +2395,7 @@ div#app {
   }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 767.98px) {
   .login-logo {
     width: 100%;
   }
@@ -2492,7 +2492,16 @@ div#app {
   main.right_sidebox {
     position: relative;
     left: 0;
+    align-items:center;
   }
+  .css-15wjj4c-MuiDataGrid-root.MuiDataGrid-autoHeight{margin-top:15px!important;}
+
+  .right_sidebox h4{color: #04255c;
+        font-size: 18px;
+        font-weight: 600;
+        text-transform: capitalize;}
+  
+
   div#app {
     position: absolute;
     top: 4rem !important;
@@ -2566,7 +2575,9 @@ div#app {
   }
   .mobile_top_pddng {
     /* padding-top: 13em !important; */
-    padding: 9em 8px 20px !important;
+            margin-top: 135px !important;
+    padding: 0em 8px 20px !important;
+    
   }
   .manage_top_header {
     position: relative !important;
@@ -2643,7 +2654,7 @@ div#app {
     justify-content: end !important;
   }
   .pro-sidebar .pro-menu {
-    padding-top: 40px !important;
+    padding-top: 0px !important;
     background: #41454E;
   }
   .css-mhc70k-MuiGrid-root {
@@ -3230,7 +3241,7 @@ input:-internal-autofill-selected{background:transparent;}
   }
   
   .all_button_clr {
-    padding: 10px 20px !important;
+    padding: 7px 17px !important;
     font-size: 0.9rem !important;
   }
 }
@@ -3249,3 +3260,54 @@ input:-internal-autofill-selected{background:transparent;}
   
     padding-left: 25px!important;
 }
+
+
+@media(max-width:767px){
+  .manage_rgiht_bdr {margin: 8px 0px!important;}
+
+.admin_header_cp {position: absolute!important;
+    left: 4%!important;}
+    .manage_rgiht_bdr{justify-content: end!important;
+        width: 100%!important;}
+
+  
+  .css-1atotdu {width: 100%!important;
+    margin-left: 0px!important;}
+
+
+        .css-9smubt {
+        width: 100%!important;
+        margin-left: 0px!important;
+    }
+  .cntnt_title{align-items: center!important;}
+  .all_button_clr{margin: 10px !important;}
+  .n-ppost-name { left: 1em; width: 90%}
+   .css-g6m3cc {
+        width: calc(100% - 240px);
+        margin-left: 0px!important;
+    }
+   .menu_icon_button{display: block!important;}
+}
+
+
+@media (min-width:575px) and (max-width: 767.98px) {
+    .mobile_top_pddng {
+        /* padding-top: 13em !important; */
+        padding: 0em 8px 20px !important;
+      
+
+    }
+}
+
+.App.theme_blue .contant_box { height: 100%!important;
+    min-height: 100vh!important;}
+
+
+    .App.theme_white .contant_box {
+    height: 100% !important;
+    min-height: 100vh !important;
+}
+
+
+.pro-sidebar > .pro-sidebar-inner > .pro-sidebar-layout{height: 100%!important;
+    min-height: auto!important;}

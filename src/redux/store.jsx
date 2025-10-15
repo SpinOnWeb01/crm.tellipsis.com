@@ -139,6 +139,7 @@ import {
 } from "./reducers/adminPortal_productsReducer";
 import {
   createAdminInvoiceReducer,
+  createManageInvoiceReducer,
   getAdminInvoiceReducers,
   updateAdminInvoiceReducer,
 } from "./reducers/adminPortal_invoiceReducer";
@@ -275,6 +276,7 @@ const reducer = combineReducers({
   createAdminPromotion: createAdminPromotionReducer, //18-02-2025
   blockUserReport: blockUserReportReducers, //02-05-2025
   createAdminLocal: createAdminLocalReducer, //19/09/2025
+  createManageInvoice: createManageInvoiceReducer, //26/09/2025
   //UPDATE
   updateUser: updateUserReducer,
   updateUserReseller: updateUserResellerReducer, //11-07-2024

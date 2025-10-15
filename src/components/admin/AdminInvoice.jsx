@@ -33,14 +33,20 @@ import { DataGrid } from "@mui/x-data-grid";
 import SendIcon from "@mui/icons-material/Send";
 import {
   createAdminInvoice,
+  createManageInvoice,
   downloadPdf,
   getAdminInvoice,
   sendMail,
+  updateAdminInvoice,
 } from "../../redux/actions/adminPortal_invoiceAction";
 import { getAllUsers } from "../../redux/actions/userAction";
 import transitions from "@material-ui/core/styles/transitions";
 import { toast } from "react-toastify";
-import { ALL_USERS_FAIL, ALL_USERS_SUCCESS } from "../../redux/constants/userConstants";
+import {
+  ALL_USERS_FAIL,
+  ALL_USERS_SUCCESS,
+} from "../../redux/constants/userConstants";
+import { portalAPIs } from "../../config/portalConfig";
 const drawerWidth = 240;
 
 const useStyles = makeStyles({
@@ -134,11 +140,15 @@ function CustomToolbar() {
 
 function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
   const [paymentStatus, setPaymentStatus] = useState("");
+  const [paymentRenewal, setPaymentRenewal] = useState("");
+  console.log("paymentRenewal", paymentRenewal);
+
   const state = useSelector((state) => state);
   const [inputFields, setInputFields] = useState([
     { name: "", quantity: 0, price: "", amount: 0 },
   ]);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [order, setOrder] = useState({
     sub_total: 0.0,
     cgst: 0.0,
@@ -156,6 +166,7 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
     email: "",
     address: "",
   });
+  const [invoiceId, setInvoiceId] = useState("");
   const [domainName, setDomainName] = useState("");
   const [value, setValue] = useState("");
   const [remainingAmount, setRemainingAmount] = useState(
@@ -169,6 +180,7 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
     if (state.portal.selectedPortal !== "crm") {
       dispatch(getAllUsers(""));
     }
+    setIsEditMode(false);
     setOpen(true);
   };
   const handleClose = () => {
@@ -196,6 +208,7 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
     });
     setSelectedNumber("");
     setSelectedNumberTwo("");
+    setPaymentRenewal("");
     setOpen(false);
   };
 
@@ -223,7 +236,47 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
       total_amount_num: 0.0,
     });
     setSelectedNumber("");
+    setPaymentRenewal("");
     setSelectedNumberTwo("");
+  };
+
+  const handleEditClick = (invoice) => {
+    setIsEditMode(true);
+    setUserDetails({
+      id: invoice.user_id,
+      username: invoice.username,
+      email: invoice.emailid,
+      address: invoice.address,
+    });
+    setPaymentStatus(invoice.is_paid);
+    setTransitionsIds(invoice.transaction_id);
+    setValue(invoice.paid_amount);
+    setSelectedPortal(
+      invoice.domain_name === "dev.tellipsis.com"
+        ? "manage"
+        : invoice.domain_name === "devsip.all8series.com"
+        ? "sip"
+        : invoice.domain_name === "devredirect.tellipsis.com"
+        ? "forwarding"
+        : invoice.domain_name === "voip.telcolinellc.com"
+        ? "telcolinellc"
+        : ""
+    );
+    setInvoiceId(invoice.invoice_id);
+    setSelectedNumber(invoice.cgst);
+    setSelectedNumberTwo(invoice.sgst);
+
+    // product details ko inputFields me daalein
+    setInputFields(
+      invoice.items.map((item) => ({
+        name: item.product_id,
+        quantity: item.quantity,
+        price: item.unitprice,
+        amount: item.amount,
+      }))
+    );
+
+    setOpen(true);
   };
 
   const handleChangeGst = (event) => {
@@ -251,14 +304,11 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
     }
   };
 
-  // ✅ in case order.total_amount_num changes from API
   useEffect(() => {
     setRemainingAmount(
       (Number(order?.total_amount_num) || 0) - (Number(value) || 0)
     );
   }, [order?.total_amount_num]);
-
-  //state
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -278,33 +328,43 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
     setPaymentStatus(value);
   };
 
-  const portalMap = {
-    sip: "devsip.all8series.com",
-    forwarding: "devredirect.tellipsis.com",
-    manage: "dev.tellipsis.com",
-    telcolinellc: "voip.telcolinellc.com",
+  const handleRenewalChange = (e) => {
+    const value = e.target.value;
+    setPaymentRenewal(value);
   };
+
+  // const portalAPIs = {
+  //   sip: "devsip.all8series.com",
+  //   forwarding: "devredirect.tellipsis.com",
+  //   manage: "dev.tellipsis.com",
+  //   telcolinellc: "voip.telcolinellc.com",
+  // };
 
   useEffect(() => {
     // Page load hone par localStorage se value set karo
     const savedPortal = localStorage.getItem("selectedPortal") || "";
     if (selectedPortal) {
-    setSelectedPortal(savedPortal);
-    setDomainName(portalMap[selectedPortal]);
-    
-  }
+      setSelectedPortal(savedPortal);
+      setDomainName(portalAPIs[selectedPortal]);
+    }
   }, [setSelectedPortal]);
 
   const handlePortalChange = (event) => {
     const selectedPortal = event.target.value;
     setSelectedPortal(selectedPortal); // ✅ UI update
-    setDomainName(portalMap[selectedPortal]);
+    setDomainName(portalAPIs[selectedPortal]);
   };
 
   useEffect(() => {
     dispatch(getAdminProducts());
-    dispatch(getAdminInvoice());
-  }, [dispatch, response]);
+    const apiUrl =
+      selectedPortal === "crm"
+        ? "" // crm ke liye blank
+        : portalAPIs[selectedPortal]
+            ?.replace(/^https?:\/\//, "") // https:// ya http:// remove
+            .replace(/\/api$/, "") || ""; // /api remove
+    dispatch(getAdminInvoice(apiUrl));
+  }, [dispatch, response, selectedPortal]);
 
   const handleFormChange = (index, event) => {
     let data = [...inputFields];
@@ -379,30 +439,116 @@ function AdminInvoice({ colorThem, selectedPortal, setSelectedPortal }) {
     dispatch(sendMail(payload, setResponse, handleClose));
   };
 
-const handleSubmit = useCallback(
-  (e) => {
-    e.preventDefault();
-    if (!portalMap[selectedPortal]) {
-      toast.error("Project name missing!");
-      return;
-    }
-    if (!userDetails || !userDetails.id || !userDetails.username || !userDetails.email || !userDetails.address) {
-      
-      toast.error("User details missing!");
-      return;
-    }
-    if (!order || order.sub_total === '0.00') {
-      toast.error("Order details missing!");
-      return;
-    }
-    const payload = JSON.stringify({
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+
+      // Validation
+      if (!selectedPortal || !portalAPIs[selectedPortal]) {
+        toast.error("Project name missing!");
+        return;
+      }
+
+      if (
+        !userDetails ||
+        !userDetails.id ||
+        !userDetails.username ||
+        !userDetails.email ||
+        !userDetails.address
+      ) {
+        toast.error("User details missing!");
+        return;
+      }
+
+      if (!order || order.sub_total === "0.00") {
+        toast.error("Order details missing!");
+        return;
+      }
+
+      // Prepare cleaned domain name
+      const rawDomain = portalAPIs[selectedPortal];
+      const cleanedDomain =
+        selectedPortal === "crm"
+          ? "" // crm ke liye blank
+          : rawDomain?.replace(/^https?:\/\//, "").replace(/\/api$/, "") || "";
+
+      // Admin invoice payload
+      const adminPayload = JSON.stringify({
+        user_id: userDetails.id,
+        username: userDetails.username,
+        email: userDetails.email,
+        address: userDetails.address,
+        sub_total: order.sub_total_num,
+        domain_name: cleanedDomain,
+        cgst: selectedNumber,
+        sgst: selectedNumberTwo,
+        tax: parseFloat(order.cgst || 0) + parseFloat(order.sgst || 0),
+        total_amount: order.total_amount_num,
+        paid_amount: value,
+        is_paid: paymentStatus,
+        remaining_amount: remainingAmount,
+        transaction_id: transitionsIds,
+        items: inputFields.map((field) => ({
+          product_id: field.name,
+          quantity: field.quantity,
+          unitprice: field.price,
+          amount: field.amount,
+        })),
+      });
+
+      dispatch(createAdminInvoice(adminPayload, setResponse, handleClose));
+
+      // Dynamic dispatch map
+      const portalDispatchMap = {
+        //sip: createSipInvoice,
+        manage: createManageInvoice,
+        // forwarding: createRedirectInvoice,
+        // telcolinellc: createVoipInvoice,
+        // crm intentionally skipped
+      };
+      const action = portalDispatchMap[selectedPortal];
+
+      if (action) {
+        const payload = JSON.stringify({
+          user_id: userDetails.id,
+          domain_name: cleanedDomain,
+          is_paid: paymentStatus,
+        });
+        dispatch(action(payload, setResponse, handleClose));
+      } else if (selectedPortal !== "crm") {
+        toast.error("Unknown portal selected!");
+      }
+    },
+    [
+      selectedPortal,
+      userDetails,
+      order,
+      value,
+      inputFields,
+      paymentStatus,
+      remainingAmount,
+      transitionsIds,
+      selectedNumber,
+      selectedNumberTwo,
+      dispatch,
+      setResponse,
+      handleClose,
+    ]
+  );
+
+  const handleUpdate = () => {
+    const parseNumber = (val) => Number(String(val).replace(/,/g, ""));
+    const updatedInvoice = JSON.stringify({
+      invoice_id: invoiceId,
       user_id: userDetails.id,
       username: userDetails.username,
       email: userDetails.email,
       address: userDetails.address,
       sub_total: order.sub_total_num,
-      domain_name: portalMap[selectedPortal],
-      tax: parseFloat(order.cgst || 0) + parseFloat(order.sgst || 0),
+      domain_name: portalAPIs[selectedPortal],
+      cgst: selectedNumber,
+      sgst: selectedNumberTwo,
+      tax: (parseNumber(order.cgst) + parseNumber(order.sgst)).toFixed(2),
       total_amount: order.total_amount_num,
       paid_amount: value,
       is_paid: paymentStatus,
@@ -415,24 +561,8 @@ const handleSubmit = useCallback(
         amount: field.amount,
       })),
     });
-
-    dispatch(createAdminInvoice(payload, setResponse, handleClose));
-  },
-  [
-    userDetails,
-    order,
-    domainName,
-    value,
-    inputFields,
-    paymentStatus,
-    remainingAmount,
-    transitionsIds,
-    portalMap[selectedPortal],
-    dispatch,
-    setResponse,
-    handleClose,
-  ]
-);
+    dispatch(updateAdminInvoice(updatedInvoice, setResponse, handleClose));
+  };
 
   const columns = [
     {
@@ -446,8 +576,8 @@ const handleSubmit = useCallback(
       renderCell: (params) => {
         return (
           <div className="d-flex  align-items-center">
-            {/* <Tooltip title="Edit">
-              <IconButton onClick={() => handleButtonClick(params.row)}>
+            <Tooltip title="Edit">
+              <IconButton onClick={() => handleEditClick(params.row)}>
                 <Edit
                   index={params.row.id}
                   style={{
@@ -458,7 +588,7 @@ const handleSubmit = useCallback(
                   }}
                 />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
             <Tooltip title="download" disableInteractive interactive>
               <IconButton>
                 <FileDownloadIcon
@@ -490,7 +620,7 @@ const handleSubmit = useCallback(
       headerAlign: "center",
       align: "center",
     },
-        {
+    {
       field: "transaction_id",
       headerName: "Transaction Id",
       width: 130,
@@ -523,7 +653,33 @@ const handleSubmit = useCallback(
       headerAlign: "center",
       align: "center",
     },
-
+    {
+      field: "items",
+      headerName: "Products",
+      headerClassName: "custom-header",
+      headerAlign: "center",
+      align: "center",
+      width: 350,
+      renderCell: (params) => {
+        if (!params.value) return "-";
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              lineHeight: "1.4",
+            }}
+          >
+            {params.value.map((it, i) => (
+              <span key={i} style={{ fontSize: "12px" }}>
+                {it.product_name} — Qty: {it.quantity}, Price: ₹{it.unitprice},
+                Total: ₹{it.amount}
+              </span>
+            ))}
+          </div>
+        );
+      },
+    },
     {
       field: "tax",
       headerName: "Tax",
@@ -558,7 +714,7 @@ const handleSubmit = useCallback(
       headerAlign: "center",
       align: "center",
     },
-        {
+    {
       field: "remaining_amount",
       headerName: "Remaining Amount",
       width: 135,
@@ -647,6 +803,10 @@ const handleSubmit = useCallback(
         domain_name: item?.domain_name,
         remaining_amount: item?.remaining_amount,
         transaction_id: item?.transaction_id,
+        address: item?.address,
+        items: item?.items,
+        cgst: item?.cgst,
+        sgst: item?.sgst,
       });
     });
 
@@ -662,7 +822,6 @@ const handleSubmit = useCallback(
               p: 0.5,
               display: "flex",
               justifyContent: "start",
-              minHeight: "100vh",
 
               marginTop: "65px",
             }}
@@ -741,7 +900,7 @@ const handleSubmit = useCallback(
                                 fontWeight={"600"}
                                 marginBottom={"16px"}
                               >
-                                Add Invoice
+                                {isEditMode ? "Edit Invoice" : "Add Invoice"}
                               </Typography>
                               <form
                                 style={{
@@ -769,22 +928,18 @@ const handleSubmit = useCallback(
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         label="SelectDomain"
-                                        helperText="Select the language."
                                         style={{ textAlign: "left" }}
                                         value={selectedPortal}
                                         onChange={handlePortalChange}
                                         disabled={true}
                                       >
-                                        <MenuItem value="sip">
-                                          devsip.all8series.com
-                                        </MenuItem>
-                                        <MenuItem value="forwarding">
-                                          devredirect.tellipsis.com
-                                        </MenuItem>
-                                        <MenuItem value="manage">
-                                          dev.tellipsis.com
-                                        </MenuItem>
-                                        <MenuItem value="telcolinellc">voip.telcolinellc.com</MenuItem>
+                                        {Object.entries(portalAPIs)
+                                          .filter(([key]) => key !== "crm") // crm ko remove kar diya
+                                          .map(([key, url]) => (
+                                            <MenuItem key={key} value={key}>
+                                              {new URL(url).hostname}
+                                            </MenuItem>
+                                          ))}
                                       </Select>
                                     </FormControl>
                                   </div>
@@ -802,6 +957,7 @@ const handleSubmit = useCallback(
                                       <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
+                                        label="UserName"
                                         style={{ textAlign: "left" }}
                                         value={userDetails || ""} // full object store kar rahe hain
                                         onChange={(e) => {
@@ -819,7 +975,7 @@ const handleSubmit = useCallback(
                                                 id: item?.id,
                                                 username: item?.username,
                                                 email: item?.email,
-                                                address: item?.address
+                                                address: item?.address,
                                               }}
                                             >
                                               {item.username}
@@ -1234,6 +1390,59 @@ const handleSubmit = useCallback(
                                             </td>
                                           </tr>
 
+                                          <tr>
+                                            <td
+                                              colSpan="3"
+                                              className="text-end"
+                                            ></td>
+
+                                            <td
+                                              colSpan="1"
+                                              className="text-start"
+                                            >
+                                              <b className="d-flex align-items-center total_bill_price d-block pt-2 text-left">
+                                                Account{" "}
+                                              </b>
+                                            </td>
+
+                                            <td
+                                              colSpan="2"
+                                              className="text-start"
+                                            >
+                                              {/* <input
+                                                type="checkbox"
+                                                className="paid_checkbox form-check-input custom-checkbox"
+                                                checked={isChecked}
+                                                onChange={handleCheckboxChange}
+                                              /> */}
+                                              <span
+                                                style={{
+                                                  fontSize: "13px",
+                                                  fontWeight: "400",
+                                                }}
+                                              >
+                                                <select
+                                                  className="form-select"
+                                                  aria-label="Renewal Status"
+                                                  value={paymentRenewal}
+                                                  onChange={handleRenewalChange}
+                                                  style={{ width: "120px" }}
+                                                >
+                                                  <option value="">
+                                                    Select
+                                                  </option>
+
+                                                  <option value="renewal">
+                                                    Renewal
+                                                  </option>
+                                                  <option value="notrenewal">
+                                                    Not-Renewal
+                                                  </option>
+                                                </select>
+                                              </span>
+                                            </td>
+                                          </tr>
+
                                           {/* reamaining amount */}
 
                                           <tr>
@@ -1365,9 +1574,11 @@ const handleSubmit = useCallback(
                                   padding: "10px 20px !important",
                                   textTransform: "capitalize !important",
                                 }}
-                                onClick={handleSubmit}
+                                onClick={
+                                  isEditMode ? handleUpdate : handleSubmit
+                                }
                               >
-                                save
+                                {isEditMode ? "Update" : "Save"}
                               </Button>
                             </Box>
                           </Fade>
@@ -1392,6 +1603,7 @@ const handleSubmit = useCallback(
                                 toolbar: CustomToolbar,
                               }}
                               autoHeight
+                              getRowHeight={() => "auto"}
                             />
                           </div>
                         </ThemeProvider>

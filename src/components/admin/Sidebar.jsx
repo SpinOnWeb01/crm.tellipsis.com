@@ -36,22 +36,48 @@ import { useDispatch, useSelector } from "react-redux";
 import { GET_ADMIN_ADD_BUYER_SUCCESS } from "../../redux/constants/adminPortal/adminPortal_addBuyerConstants";
 // ========End Mobile-sidebar===============>
 
-  const menuConfig = {
+const menuConfig = {
   forwarding: [
-    { label: "Usage Minutes", icon: <AvTimerIcon />, route: Router.ADMIN_BILLING_MINUTES },
-    { label: "Details", icon: <QueryBuilderIcon />, route: Router.ADMIN_MINUTES },
+    {
+      label: "Usage Minutes",
+      icon: <AvTimerIcon />,
+      route: Router.ADMIN_BILLING_MINUTES,
+    },
+    {
+      label: "Details",
+      icon: <QueryBuilderIcon />,
+      route: Router.ADMIN_MINUTES,
+    },
     { label: "RCR", icon: <HistoryIcon />, route: Router.ADMIN_HISTORY },
     { label: "CMU", icon: <CalendarMonthIcon />, route: Router.ADMIN_CMU },
   ],
   default: [
-    { label: "Usage Minutes", icon: <AvTimerIcon />, route: Router.ADMIN_BILLING_MINUTES },
-    { label: "Toll Free", icon: <QueryBuilderIcon />, route: Router.ADMIN_MINUTES },
-    { label: "Local", icon: <HistoryToggleOffIcon />, route: Router.ADMIN_LOCAL },
+    {
+      label: "Usage Minutes",
+      icon: <AvTimerIcon />,
+      route: Router.ADMIN_BILLING_MINUTES,
+    },
+    {
+      label: "Toll Free",
+      icon: <QueryBuilderIcon />,
+      route: Router.ADMIN_MINUTES,
+    },
+    {
+      label: "Local",
+      icon: <HistoryToggleOffIcon />,
+      route: Router.ADMIN_LOCAL,
+    },
     { label: "RCR", icon: <HistoryIcon />, route: Router.ADMIN_HISTORY },
   ],
 };
 
-function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubMenu }) {
+function Sidebar({
+  colorThem,
+  handleClick,
+  sidebarOpen,
+  openSubMenu,
+  setOpenSubMenu,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = localStorage.getItem("selectedPortal");
@@ -167,6 +193,34 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubM
             DID Number
           </MenuItem>
 
+          <SubMenu
+            title="Products"
+            icon={<AddToQueueIcon />}
+            onClick={() =>
+              setOpenSubMenu(openSubMenu === "products" ? null : "products")
+            }
+            open={openSubMenu === "products"}
+          >
+            <MenuItem
+              icon={<CardGiftcardIcon />}
+              onClick={(event) =>
+                handleSubMenuClick(event, Router.ADMIN_PRODUCT)
+              }
+            >
+              Add Products
+            </MenuItem>
+            <Tooltip title="Invoice" disableInteractive interactive>
+              <MenuItem
+                icon={<ReceiptIcon />}
+                onClick={(event) =>
+                  handleSubMenuClick(event, Router.ADMIN_INVOICE)
+                }
+              >
+                Invoice
+              </MenuItem>
+            </Tooltip>
+          </SubMenu>
+
           <MenuItem
             icon={<HelpOutlineOutlinedIcon />}
             onClick={() => navigateTo(Router.ADMIN_REPORT)}
@@ -214,19 +268,52 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubM
               CMU
             </MenuItem>
           </SubMenu>
+
+          {/*  */}
+
+          <MenuItem
+            icon={<VerifiedUserIcon />}
+            onClick={(event) => navigateTo(Router.ADMIN_AUDIT_LOGS)}
+          >
+            Audit logs
+          </MenuItem>
+
+          <MenuItem
+            icon={<PeopleAltIcon />}
+            onClick={() => navigateTo(Router.ADMIN_ROLES)}
+          >
+            Roles
+          </MenuItem>
+          <MenuItem
+            icon={<AssignmentIndIcon />}
+            onClick={() => navigateTo(Router.ADMIN_PERMISSIONS_ACCESS)}
+          >
+            Permissions
+          </MenuItem>
         </Menu>
       </ProSidebar>
 
       <Box
         sx={{
-          position: "absolute",
-          bottom: "6%",
-          left: "40%",
-          transform: "translate(-50%, 0)",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          gap: "0px",
+           position: "relative", // ✅ stays fixed on screen
+                            // bottom: "-1rem", // ✅ distance from bottom
+                            left: "50%",
+                            transform: "translate(-50%, 15%)",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: "10px",
+                            justifyContent: "center",
+                            zIndex: 1300,
+          // position: "absolute",
+          // bottom: "6%",
+          // left: "40%",
+          // transform: "translate(-50%, 0)",
+          // display: "flex",
+          // flexDirection: "row",
+          // alignItems: "center",
+          // gap: "0px",
+          // zIndex: "9999",
         }}
       >
         <Tooltip
@@ -309,7 +396,7 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubM
           <div className={`App ${colorThem} `}>
             <div className="contant_box">
               <Box
-                className="right_sidebox pt-4 d-lg-none d-md-none d-sm-none d-xs-block d-block"
+                className="right_sidebox pt-4 d-lg-none d-md-none d-sm-block d-xs-block d-block"
                 component="main"
                 sx={{
                   flexGrow: 1,
@@ -357,7 +444,7 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubM
                   flexShrink: 0,
                 }}
               >
-                <div className="d-lg-block d-md-block d-sm-block d-xs-none d-none side_bar_media">
+                <div className="d-lg-block d-md-block d-sm-none d-xs-none d-none side_bar_media">
                   <Box collapsed={sidebarOpen}>
                     <ProSidebar
                       id="admin_sidebar"
@@ -427,26 +514,29 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubM
                           Report
                         </MenuItem>
                         <SubMenu
-      title="Billing"
-      icon={<AccountBalanceWalletIcon />}
-      onClick={() =>
-        setOpenSubMenu(openSubMenu === "billing" ? null : "billing")
-      }
-      open={openSubMenu === "billing"}
-    >
-      {activeMenu.map((item) => (
-        <MenuItem
-          key={item.label}
-          icon={item.icon}
-          onClick={(event) => handleSubMenuClick(event, item.route)}
-        >
-          {item.label}
-        </MenuItem>
-      ))}
-    </SubMenu>
+                          title="Billing"
+                          icon={<AccountBalanceWalletIcon />}
+                          onClick={() =>
+                            setOpenSubMenu(
+                              openSubMenu === "billing" ? null : "billing"
+                            )
+                          }
+                          open={openSubMenu === "billing"}
+                        >
+                          {activeMenu.map((item) => (
+                            <MenuItem
+                              key={item.label}
+                              icon={item.icon}
+                              onClick={(event) =>
+                                handleSubMenuClick(event, item.route)
+                              }
+                            >
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </SubMenu>
 
-
-                            {/* <SubMenu
+                        {/* <SubMenu
                           title="Settings"
                           icon={<SettingsIcon />}
                           onClick={() => handleSubMenu()}
@@ -454,44 +544,40 @@ function Sidebar({ colorThem, handleClick, sidebarOpen, openSubMenu, setOpenSubM
                         > */}
 
                         <MenuItem
-                            icon={<VerifiedUserIcon />}
-                            onClick={(event) =>
-                              navigateTo(Router.ADMIN_AUDIT_LOGS)
-                            }
-                          >
-                            Audit logs
-                          </MenuItem>
-                              <MenuItem
-                            icon={<PeopleAltIcon />}
-                            onClick={() =>
-                              navigateTo(Router.ADMIN_ROLES)
-                            }
-                          >
-                            Roles
-                          </MenuItem>
-                              <MenuItem
-                                icon={<AssignmentIndIcon />}
-                                onClick={() =>
-                                  navigateTo(
-                                    Router.ADMIN_PERMISSIONS_ACCESS
-                                  )
-                                }
-                              >
-                                Permissions
-                              </MenuItem>
+                          icon={<VerifiedUserIcon />}
+                          onClick={(event) =>
+                            navigateTo(Router.ADMIN_AUDIT_LOGS)
+                          }
+                        >
+                          Audit logs
+                        </MenuItem>
+                        <MenuItem
+                          icon={<PeopleAltIcon />}
+                          onClick={() => navigateTo(Router.ADMIN_ROLES)}
+                        >
+                          Roles
+                        </MenuItem>
+                        <MenuItem
+                          icon={<AssignmentIndIcon />}
+                          onClick={() =>
+                            navigateTo(Router.ADMIN_PERMISSIONS_ACCESS)
+                          }
+                        >
+                          Permissions
+                        </MenuItem>
 
                         <Box
                           sx={{
-                            position: "absolute",
-                            bottom: "12%", // fixed spacing from bottom
+                            position: "relative", // ✅ stays fixed on screen
+                            // bottom: "-1rem", // ✅ distance from bottom
                             left: "50%",
-                            transform: "translateX(-50%)",
+                            transform: "translate(-50%, 15%)",
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center",
                             gap: "10px",
-
                             justifyContent: "center",
+                            zIndex: 1300,
                           }}
                         >
                           <Tooltip

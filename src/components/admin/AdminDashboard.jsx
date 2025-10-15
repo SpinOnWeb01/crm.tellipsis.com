@@ -30,12 +30,11 @@ function StatCard({ Icon, title, total, remaining, gradient }) {
   return (
     <Card
       sx={{
-        
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-start",
         p: 3,
-        
+
         borderRadius: "18px",
         background: gradient,
         boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
@@ -141,7 +140,7 @@ function AdminDashboard({ selectedPortal }) {
   }, [calculatedTotals]);
 
   return (
-    <div className="contant_box px-2" style={ { height: '100%'} }>
+    <div className="contant_box " style={{ height: "100%" }}>
       {/* Page Title & Button */}
 
       <Box
@@ -154,21 +153,46 @@ function AdminDashboard({ selectedPortal }) {
           display: "flex",
           justifyContent: "space-between",
 
-          marginTop: "70px",
+          marginTop: "80px",
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 600, color: "#41454E" }}>
-          Dashboard
-        </Typography>
-
-        <Button
-          variant="contained"
-          className="all_button_clr"
-          startIcon={<AddOutlinedIcon />}
-          onClick={handleOpen}
+        <div
+          className="cntnt_title mt-3"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+          }}
         >
-          Add Product
-        </Button>
+          <div>
+            <h3
+              style={{
+                margin: "0px",
+                color: "#41454E",
+                fontWeight: "500",
+                fontSize: "2rem",
+              }}
+            >
+              Dashboard
+            </h3>
+          </div>
+
+          {state.portal.selectedPortal === "crm" ? (
+            <>
+              <Button
+                variant="contained"
+                className="all_button_clr"
+                startIcon={<AddOutlinedIcon />}
+                onClick={handleOpen}
+              >
+                Add Product
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
       </Box>
 
       {/* Stat Cards */}
@@ -178,7 +202,7 @@ function AdminDashboard({ selectedPortal }) {
             sx={{
               width: "100%",
               maxWidth: 1100,
-              minHeight:"100%",
+              minHeight: "100%",
               mx: "auto",
               paddingTop: "20px",
             }}
