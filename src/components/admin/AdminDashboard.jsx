@@ -140,20 +140,17 @@ function AdminDashboard({ selectedPortal }) {
   }, [calculatedTotals]);
 
   return (
-    <div className="contant_box " style={{ height: "100%" }}>
-      {/* Page Title & Button */}
-
+    <div className="contant_box">
       <Box
-        className="right_sidebox mobile_top_pddng "
+        className="right_sidebox mobile_top_pddng"
         component="main"
         sx={{
           flexGrow: 1,
-          p: 1,
-
+          p: 0.5,
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "start",
 
-          marginTop: "80px",
+          marginTop: "65px",
         }}
       >
         <div
@@ -172,6 +169,7 @@ function AdminDashboard({ selectedPortal }) {
                 color: "#41454E",
                 fontWeight: "500",
                 fontSize: "2rem",
+                paddingLeft: "10px",
               }}
             >
               Dashboard
@@ -198,15 +196,9 @@ function AdminDashboard({ selectedPortal }) {
       {/* Stat Cards */}
       {state.portal.selectedPortal !== "crm" ? (
         <>
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: 1100,
-              minHeight: "100%",
-              mx: "auto",
-              paddingTop: "20px",
-            }}
-          >
+           <div className="container-fluid pt-3">
+              <div className="row">
+                <div className="col-lg-12">
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
                 <StatCard
@@ -245,7 +237,10 @@ function AdminDashboard({ selectedPortal }) {
             />
           </Grid> */}
             </Grid>
-          </Box>
+          </div>
+          </div>
+          </div>
+          
         </>
       ) : (
         <></>

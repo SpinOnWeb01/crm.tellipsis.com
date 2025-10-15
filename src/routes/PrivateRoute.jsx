@@ -23,6 +23,7 @@ import AdminRoles from "../components/admin/AdminRoles";
 import AdminPermission from "../components/admin/AdminPermission";
 import AdminAuditLog from "../components/admin/AdminAuditLogs";
 import AdminLocal from "../components/admin/AdminLocal";
+import AdminCallActive from "../components/admin/AdminCallActive";
 
 
 
@@ -97,6 +98,10 @@ function PrivateRoute() {
               <Route
                 path={Router.ADMIN_REPORT}
                 element={<AdminReport colorThem={colorThem} />}
+              />
+              <Route
+                path={Router.ADMIN_CALL_ACTIVE}
+                element={<AdminCallActive colorThem={colorThem} />}
               />
               <Route
                 path={Router.ADMIN_BILLING_MINUTES}

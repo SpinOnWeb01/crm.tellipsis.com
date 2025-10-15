@@ -1325,7 +1325,7 @@ function User({ colorThem, selectedPortal }) {
               open={openModal}
               onClose={handleCloseModal}
               sx={{ textAlign: "center", borderRadius: "10px" }}
-            >
+             >
               <Box>
                 <IconButton
                   onClick={handleCloseModal}

@@ -27,6 +27,7 @@ import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import NightlightIcon from "@mui/icons-material/Nightlight";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import RingVolumeIcon from "@mui/icons-material/RingVolume";
 import "../admin/adminstyle.css";
 
 // ========Mobile-sidebar===============>
@@ -226,6 +227,12 @@ function Sidebar({
             onClick={() => navigateTo(Router.ADMIN_REPORT)}
           >
             Report
+          </MenuItem>
+          <MenuItem
+            icon={<RingVolumeIcon />}
+            onClick={() => navigateTo(Router.ADMIN_CALL_ACTIVE)}
+          >
+            Live Calls
           </MenuItem>
 
           <SubMenu
@@ -513,6 +520,12 @@ function Sidebar({
                         >
                           Report
                         </MenuItem>
+                        <MenuItem
+            icon={<RingVolumeIcon />}
+            onClick={() => navigateTo(Router.ADMIN_CALL_ACTIVE)}
+          >
+            Live Calls
+          </MenuItem>
                         <SubMenu
                           title="Billing"
                           icon={<AccountBalanceWalletIcon />}
